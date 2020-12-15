@@ -1,0 +1,44 @@
+# [REQUIRED]: object.
+gitcall_network_policy:
+    # [REQUIRED]: object.
+    docker_registry:
+        # Alternative settings:
+        # 1#
+        # [REQUIRED]: array.
+        # nets: []
+        # [REQUIRED]: string.
+        # type: 'nets'
+        egress:
+            # [REQUIRED]: string.
+            type: 'disabled'
+        # Alternative settings:
+        # 1#
+        # [REQUIRED]: array.
+        # nets: []
+        # [REQUIRED]: string.
+        # type: 'nets'
+        ingress:
+            # [REQUIRED]: string.
+            namespaceSelector: 'projectcalico.org/name == ''kube-system'''
+            # [REQUIRED]: string.
+            selector: 'app == ''nginx-ingress'''
+            # [REQUIRED]: string.
+            type: 'selector'
+release:
+    name: 'gitcall_network_policy_release'
+    helm:
+        enabled: true
+        chart:
+            version: '0.1.2'
+            description: 'aDescription'
+        context: ''
+        namespace: ''
+        release: ''
+        deploy: ['gitcall_network_policy']
+    require:
+        gitcall_network_policy: 'aVersion'
+    repositories:
+        gitcall_network_policy:
+            source: 'local'
+            local:
+                path: '../'

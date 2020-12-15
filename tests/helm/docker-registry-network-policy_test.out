@@ -1,0 +1,43 @@
+# Source: gitcall_network_policy_release/charts/gitcall_network_policy/templates/docker-registry-network-policy.yaml
+apiVersion: crd.projectcalico.org/v1
+kind: NetworkPolicy
+metadata:
+  name: RELEASE-NAME-gitcall-docker-registry-network-policy
+  namespace: "aNamespace"
+  labels:
+    release: "RELEASE-NAME"
+    app: "gitcall"
+    tier: "network_policy"
+spec:
+  selector: app == 'docker-registry'
+  types:
+    - Egress
+    - Ingress
+  ingress:
+    - action: Allow
+      protocol: TCP
+      source:
+        namespaceSelector: projectcalico.org/name == 'kube-system'
+        selector: app == 'nginx-ingress'
+      destination:
+        ports:
+          - 5000
+  egress:
+    # DNS
+    - action: Allow
+      protocol: UDP
+      destination:
+        namespaceSelector: projectcalico.org/name == 'kube-system'
+        selector: k8s-app == 'kube-dns'
+        ports:
+          - 53
+    - action: Allow
+      protocol: TCP
+      destination:
+        nets:
+          - "127.0.0.1/8"
+          - "192.168.0.0/16"
+        ports:
+          - 443
+---
+# Source: gitcall_network_policy_release/charts/gitcall_network_policy/templates/gitcall-network-policy.yaml

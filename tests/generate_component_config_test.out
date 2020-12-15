@@ -1,0 +1,26 @@
+# [REQUIRED]: object.
+gitcall_network_policy:
+    # [REQUIRED]: object.
+    docker_registry:
+        # Alternative settings:
+        # 1#
+        # [REQUIRED]: array.
+        # nets: []
+        # [REQUIRED]: string.
+        # type: 'nets'
+        egress:
+            # [REQUIRED]: string.
+            type: 'disabled'
+        # Alternative settings:
+        # 1#
+        # [REQUIRED]: array.
+        # nets: []
+        # [REQUIRED]: string.
+        # type: 'nets'
+        ingress:
+            # [REQUIRED]: string.
+            namespaceSelector: 'projectcalico.org/name == ''kube-system'''
+            # [REQUIRED]: string.
+            selector: 'app == ''nginx-ingress'''
+            # [REQUIRED]: string.
+            type: 'selector'

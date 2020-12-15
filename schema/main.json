@@ -1,0 +1,73 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://schema.corezoid.com/gitcall/network-policy/main.json",
+  "type": "object",
+  "required": ["gitcall_network_policy"],
+  "properties": {
+    "gitcall_network_policy": {
+      "type": "object",
+      "required": ["docker_registry"],
+      "properties": {
+        "docker_registry": {
+          "type": "object",
+          "properties": {
+            "ingress": {
+              "oneOf": [
+                {
+                  "cz:default": true,
+                  "type": "object",
+                  "required": ["type", "namespaceSelector", "selector"],
+                  "properties": {
+                    "type": {"type": "string", "enum": ["selector"], "default": "selector"},
+                    "namespaceSelector": {"type": "string", "minLength": 1, "maxLength": 10000, "default": "projectcalico.org/name == 'kube-system'"},
+                    "selector": {"type": "string", "minLength": 1, "maxLength": 10000, "default": "app == 'nginx-ingress'"}
+                  }
+                },
+                {
+                  "type": "object",
+                  "required": ["type", "nets"],
+                  "properties": {
+                    "type": {"type": "string", "enum": ["nets"], "default": "nets"},
+                    "nets": {
+                      "type": "array",
+                      "minItems": 1,
+                      "items": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                }
+              ]
+            },
+            "egress": {
+              "oneOf": [
+                {
+                  "cz:default": true,
+                  "type": "object",
+                  "required": ["type"],
+                  "properties": {
+                    "type": {"type": "string", "enum": ["disabled"], "default": "disabled"}
+                  }
+                },
+                {
+                  "type": "object",
+                  "required": ["type", "nets"],
+                  "properties": {
+                    "type": {"type": "string", "enum": ["nets"], "default": "nets"},
+                    "nets": {
+                      "type": "array",
+                      "minItems": 1,
+                      "items": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        }
+      }
+    }
+  }
+}
